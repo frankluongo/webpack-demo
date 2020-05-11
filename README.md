@@ -121,6 +121,113 @@ This is fairly simple, but isn't dynamic and doesn't address duplication.
   },
 ```
 
+### Prevent Duplication
+
+#### Entry Dependencies
+
+We can manually define which imports modules share.
+
+`webpack.config.js`
+
+```js
+entry: {
+  index: { import: './src/index.js', dependOn: 'shared' },
+  another: { import: './src/another-module.js', dependOn: 'shared' },
+  shared: 'lodash',
+},
+```
+
+#### Split Chunks Plugin
+
+A better method is to use this plugin. It will automagically remove duplicated dependencies.
+
+`webpack.config.js`
+
+```js
+optimization: {
+  splitChunks: {
+    chunks: 'all',
+  },
+},
+```
+
+Here are some other useful plugins that do similar work:
+
+- [`mini-css-extract-plugin`](https://webpack.js.org/plugins/mini-css-extract-plugin): Splits CSS out from the main app
+- [`bundle-loader`](https://webpack.js.org/loaders/bundle-loader): Used to split code and lazy load the resulting bundles
+- [`promise-loader`](https://github.com/gaearon/promise-loader): Similar to `bundle-loader` but uses promises
+
+#### Dynamic Imports
+
+This can be done using `import()` and `require.ensure`. The recommended way is using `import()`.
+
+webpack.config.js
+
+```js
+const path = require("path");
+
+module.exports = {
+  mode: "development",
+  entry: {
+    index: "./src/index.js",
+  },
+  output: {
+    filename: "[name].bundle.js",
+    chunkFilename: "[name].bundle.js",
+    publicPath: "dist/",
+    path: path.resolve(__dirname, "dist"),
+  },
+};
+```
+
+Here we use `ChunkFileName` to determine the name of non-entry chunk files.
+
+`index.js`
+
+```js
+function getComponent() {
+  return import(/* webpackChunkName: "lodash" */ "lodash")
+    .then(({ default: _ }) => {
+      const element = document.createElement("div");
+
+      element.innerHTML = _.join(["Hello", "webpack"], " ");
+
+      return element;
+    })
+    .catch((error) => "An error occurred while loading the component");
+}
+
+getComponent().then((component) => {
+  document.body.appendChild(component);
+});
+```
+
+Here we're dynamically grabbing lodash using the import statement. So that we only use it if we need it.
+
+This can be cleaned up a bit using an `async` function. To do that, we need Babel and the [`Syntax Dynamic import Babel Plugin`](https://babeljs.io/docs/plugins/syntax-dynamic-import/#installation).
+
+`index.js` with async
+
+```js
+async function getComponent() {
+  const element = document.createElement("div");
+  const { default: _ } = await import(
+    /* webpackChunkName: "lodash" */ "lodash"
+  );
+
+  element.innerHTML = _.join(["Hello", "webpack"], " ");
+  return element;
+}
+
+getComponent().then((component) => {
+  document.body.appendChild(component);
+});
+```
+
+#### Prefetching / Preloading Modules
+
+DO THIS NEXT
+
 ## Hot Module Replacement [HMR]
 
 ### Enabling HMR
