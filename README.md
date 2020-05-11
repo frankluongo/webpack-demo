@@ -98,6 +98,29 @@ app.listen(3000, function () {
 });
 ```
 
+## Code Splitting
+
+This allows you to split your code into various bundles that will help you improve load time.
+
+There are three general approaches:
+
+1. Entry Points: manually split code using the `entry` config
+2. Prevent Duplication: Use the [`SplitChunksPlugin`](https://webpack.js.org/plugins/split-chunks-plugin/) to do that
+3. Dynamic Imports: Split code via inline functions
+
+### Entry Points
+
+This is fairly simple, but isn't dynamic and doesn't address duplication.
+
+`webpack.config.js`
+
+```js
+  entry: {
+   index: './src/index.js',
+   another: './src/another-module.js',
+  },
+```
+
 ## Hot Module Replacement [HMR]
 
 ### Enabling HMR
