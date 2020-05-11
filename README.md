@@ -99,3 +99,92 @@ app.listen(3000, function () {
 ```
 
 ## Hot Module Replacement [HMR]
+
+### Enabling HMR
+
+When using Webpack's Dev Server, we can enable Hot Module Reloading by adding it to our `webpack.config.js`
+
+```js
+  devServer: {
+    contentBase: './dist',
+    hot: true,
+  },
+```
+
+Alternatively, we can also do it using the `CLI`
+
+```bash
+npm run webpack-dev-server --hotOnly
+```
+
+### Via The Node.js API
+
+For node, best practice is to pass an `options` object to your `new WebpackDevServer`. In addition to that, you also need to modify your Webpack config to include Hot Module Reloading entry points. You can add those using the `addDevServerEntrypoints` method.
+
+Here's an example config file (`server-dev.js`):
+
+```js
+// Require Webpack and the Dev Server
+const webpackDevServer = require("webpack-dev-server");
+const webpack = require("webpack");
+
+// Pull in our webpack config file
+const config = require("./webpack.config.js");
+
+// The options we pass to tell webpack we want some hot reloadin'
+const options = {
+  contentBase: "./dist",
+  hot: true,
+  host: "localhost",
+};
+
+// Add our config and options the addDevServerEntrypoints method
+webpackDevServer.addDevServerEntrypoints(config, options);
+// Define our compiler by passing our config file to Webpack
+const compiler = webpack(config);
+// Define our server as a new WebpackDevServer that uses our compiler and options
+const server = new webpackDevServer(compiler, options);
+// Tell that server to initialize on port 5000 of localhost
+server.listen(5000, "localhost", () => {
+  console.log("dev server listening on port 5000");
+});
+```
+
+Using the `webpack-dev-middleware`? Read the [Dev Hot Middleware Docs](https://github.com/webpack-contrib/webpack-hot-middleware) for how to enable HMR with that.
+
+### Gotchas
+
+By default, HMR doesn't re-render anything on update. You have to either do this yourself or use a loader to refresh the page.
+
+### HMR With Stylesheets
+
+This is actually pretty simple because `style-loader` uses HMR behind the scenes.
+
+First, make sure you have it
+
+```bash
+  npm install --save-dev style-loader css-loader
+```
+
+Second, make sure it's defined in your config file's modules
+
+```js
+module: {
+  rules: [
+          {
+            test: /\.css$/,
+            use: ['style-loader', 'css-loader'],
+          },
+        ],
+  },
+```
+
+Take your server down and bring it back up. Voilá!
+
+### Other Code and Frameworks
+
+- [React Hot Loader](https://github.com/gaearon/react-hot-loader): Tweak react components in real time.
+- [Vue Loader](https://github.com/vuejs/vue-loader): This loader supports HMR for vue components out of the box.
+- [Elm Hot webpack Loader](https://github.com/klazuka/elm-hot-webpack-loader): Supports HMR for the Elm programming language.
+- [Angular HMR](https://github.com/gdi2290/angular-hmr): No loader necessary! A simple change to your main NgModule file is all that's required to have full control over the HMR APIs.
+- [Svelte Loader](https://github.com/sveltejs/svelte-loader): This loader supports HMR for Svelte components out of the box.

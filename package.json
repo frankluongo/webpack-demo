@@ -9,6 +9,7 @@
     "build": "webpack",
     "start": "webpack-dev-server --open",
     "server": "node server.js",
+    "server:dev": "node server-dev.js --mode=development",
     "watch": "webpack --watch"
   },
   "keywords": [],
