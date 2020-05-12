@@ -226,7 +226,56 @@ getComponent().then((component) => {
 
 #### Prefetching / Preloading Modules
 
-DO THIS NEXT
+This is a way of telling a browser, "hey, I might need this in the future so go off and grab it when you get a chance."
+
+Preload vs Prefetch
+
+- Preloaded chunk loads in parallel to the parent / Prefetched starts loading after the parent finishes
+- Preloaded chunk has medium priority and is instantly downloaded / Prefetched loads during idle time
+- Preloaded chunk should be instantly requested by the parent / Prefetched chunk can be used in the future
+
+Preload example: a component that depends on a big library that should be loaded separately
+
+`ChartComponent.js`
+
+```js
+import(/* webpackPreload: true */ "ChartingLibrary");
+```
+
+This component will grab that library and show a loading notice while waiting. This will boost performance since you only make one request instead of two
+
+#### Bundle Analysis
+
+There are a handful of tools to help you see how your code is being split out.
+
+- [Official Analyze Tool](https://github.com/webpack/analyse)
+- [Webpack Chart](https://alexkuz.github.io/webpack-chart/): Interactive Pie Chart of Stats
+- [Webpack Visualizer](https://chrisbateman.github.io/webpack-visualizer/): Visualize and analyze bundles to see which modules are taking up space and might be duplicates
+- [Webpack Bundle Analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer): Turns bundles into interactive zoomable treemap
+- [Webpack Bundle Optimize Helper](https://webpack.jakoblind.no/optimize): Analyzes bundle and gives suggestions for improvement
+- [Bundle Stats](https://github.com/bundle-stats/bundle-stats):
+
+## Caching
+
+### Output Filenames
+
+### Extracing Boilerplate
+
+### Module Identifiers
+
+## Authoring Libraries
+
+## Environment Variables
+
+## Build Performance
+
+## Content Security Policies
+
+## Development - Vagrant
+
+## Installation
+
+## Scaffolding
 
 ## Hot Module Replacement [HMR]
 
@@ -318,3 +367,23 @@ Take your server down and bring it back up. Voilá!
 - [Elm Hot webpack Loader](https://github.com/klazuka/elm-hot-webpack-loader): Supports HMR for the Elm programming language.
 - [Angular HMR](https://github.com/gdi2290/angular-hmr): No loader necessary! A simple change to your main NgModule file is all that's required to have full control over the HMR APIs.
 - [Svelte Loader](https://github.com/sveltejs/svelte-loader): This loader supports HMR for Svelte components out of the box.
+
+## Tree Shaking
+
+## Production
+
+## Lazy Loading
+
+## Shimming
+
+## TypeScript
+
+## Progressive Web Application
+
+## Public Path
+
+## Integrations
+
+## Asset Modules
+
+## Advanced Entry
