@@ -265,7 +265,33 @@ There are a handful of tools to help you see how your code is being split out.
 
 ## Authoring Libraries
 
+### Authoring a Library
+
+### Base Configuration
+
+### Base Configuration with Source Map
+
+### Externalize Lodash
+
+### External Limitations
+
+### Expose The Library
+
+#### Final Steps
+
 ## Environment Variables
+
+Webpack can use the `--env.VARIABLE_NAME=variable` command to pass in environment variables
+
+```bash
+  webpack --env.NODE_ENV=local --env.production --progress
+```
+
+- `--env.NODE_ENV=local` creates a variable called `NODE_ENV` and sets it to local
+- `--env.production` sets the `production` variable to true
+- `--progress` prints compilcation progress in a percentage
+
+In order to use a `.env` file, you need to grab one of the [Environment Plugins](https://webpack.js.org/plugins/environment-plugin/) and configure that.
 
 ## Build Performance
 
